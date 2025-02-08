@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-
+const mongoose=require("mongoose")
 const QuizSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -9,7 +8,7 @@ const QuizSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Animals', 'Plants', 'Fish', 'Microorganisms', 'Others'], // Categories based on interest
+    enum: ['Animals', 'Plants', 'Fish', 'Microorganisms', 'Others'], 
   },
   difficulty: {
     type: String,
@@ -29,7 +28,7 @@ const QuizSchema = new mongoose.Schema({
   ],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Teacher', // Reference to the Teacher who created the quiz
+    ref: 'Teacher',
     required: true
   },
   createdAt: {
@@ -38,4 +37,4 @@ const QuizSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('Quiz', QuizSchema);
+module.exports= mongoose.model('Quiz', QuizSchema);

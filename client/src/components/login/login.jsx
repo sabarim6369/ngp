@@ -7,29 +7,119 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (!role) {
+      toast.error("Please select a role");
+      return;
+    }
+  
     try {
-      const response = await axios.post("http://localhost:2000/api/player/login", {
-        email,
-        password,
-      });
-
-      toast.success("Login successful!");
-
-      localStorage.setItem("token", response.data.token);
-
-      setTimeout(()=>{
-        navigate("/");
-
-      },[2000])
+      console.log(`Logging in with email: ${email} and role: ${role}`);
+  
+      if (role === "student") {
+        const response = await axios.post("http://localhost:2000/api/student/login", {
+          email,
+          password,
+          role,
+        });
+  
+        console.log("API Response for Student:", response);
+  
+        if (response.status === 200) {
+          toast.success("Login successful!");
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            setTimeout(() => {
+              navigate("/student");
+            }, 2000); // Delay navigation by 2 seconds
+          } else {
+            toast.error("No token received from server.");
+          }
+        } else {
+          toast.error("Login failed: Invalid response status");
+        }
+      } else if (role === "admin") {
+        const response = await axios.post("http://localhost:2000/api/admin/login", {
+          email,
+          password,
+          role,
+        });
+  
+        console.log("API Response for Admin:", response);
+  
+        if (response.status === 200) {
+          toast.success("Login successful!");
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            setTimeout(() => {
+              navigate("/admin");
+            }, 2000); // Delay navigation by 2 seconds
+          } else {
+            toast.error("No token received from server.");
+          }
+        } else {
+          toast.error("Login failed: Invalid response status");
+        }
+      } else if (role === "superadmin") {
+        const response = await axios.post("http://localhost:2000/api/superadmin/login", {
+          email,
+          password,
+          role,
+        });
+  
+        console.log("API Response for Superadmin:", response);
+  
+        if (response.status === 200) {
+          console.log(response.data);
+          toast.success("Login successful!");
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            setTimeout(() => {
+              navigate("/superadmin");
+            }, 2000); // Delay navigation by 2 seconds
+          } else {
+            toast.error("No token received from server.");
+          }
+        } else {
+          toast.error("Login failed: Invalid response status");
+        }
+      } else if (role === "teacher") {
+        const response = await axios.post("http://localhost:2000/api/teacher/login", {
+          email,
+          password,
+          role,
+        });
+  
+        console.log("API Response for Teacher:", response);
+  
+        if (response.status === 200) {
+          toast.success("Login successful!");
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            setTimeout(() => {
+              navigate("/teacher");
+            }, 2000); // Delay navigation by 2 seconds
+          } else {
+            toast.error("No token received from server.");
+          }
+        } else {
+          toast.error("Login failed: Invalid response status");
+        }
+      } else {
+        toast.error("Invalid role selected");
+      }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error(error.response?.data?.message || "Login failed");
     }
   };
+  
+  
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-indigo-100 via-blue-200 to-green-200">
@@ -61,6 +151,25 @@ const Login = () => {
               placeholder="Enter your password"
             />
           </div>
+
+          {/* Role Selection Dropdown */}
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+              className="w-full px-4 py-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="" disabled>Select Role</option>
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+              <option value="superadmin">Superadmin</option>
+              <option value="teacher">Teacher</option>
+            </select>
+          </div>
+
           <button
             type="submit"
             className="w-full py-3 mt-4 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-600 focus:outline-none"
