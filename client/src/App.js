@@ -1,7 +1,15 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './components/dashboard/Dashboard';
+import Login from "./components/login/login";
+import Signup from './components/signup/Signup';
 export default function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <h1 className="text-4xl font-bold text-blue-600">Hello, Tailwind!</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </Router>
   );
 }
